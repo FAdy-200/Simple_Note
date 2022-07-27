@@ -33,4 +33,8 @@ class DBManage{
     final db = await connect();
     db.update('notes', note.toMap(), where: 'id = ?',whereArgs: [note.id]);
   }
+  Future<void> deleteNote(Note note) async {
+    final db = await connect();
+    db.delete('notes', where: "id = ?", whereArgs: [note.id]);
+  }
 }

@@ -64,7 +64,16 @@ class _NoteMainState extends State<NoteMain> {
                         MaterialPageRoute(
                             builder: (context)=>DetailScreen(note: snapshot.data![i])
                         )
-                    ).then((value) => handler.updateNote(snapshot.data![i]));
+                    ).then((value) async {
+                      if(value == null){
+                        await handler.deleteNote(snapshot.data![i]);
+                        setState(() {
+                          snapshot.data!.remove(snapshot.data![i]);
+                        });
+                      }else if (value){
+                        await handler.updateNote(value);
+                      }
+                    });
                   },
                 );
               });

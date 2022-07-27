@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'note.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -10,12 +11,45 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   TextEditingController controllers = TextEditingController();
+  var pressed = false;
+  var changed = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
             widget.note.name
+        ),
+      actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: (){
+              if(pressed) {
+                Navigator.pop(context);
+              } else{
+                pressed = true;
+                Fluttertoast.showToast(
+                    msg: "Press again to delete",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0
+                );
+              }
+            },
+            tooltip: "Delete Note",
+          ),
+        ],
+        leading: BackButton(
+          onPressed: (){
+            if(changed){
+                Navigator.pop(context,widget.note);
+            }else{
+              Navigator.pop(context,changed);
+            }
+          }
         ),
       ),
       body: ListView.builder(
@@ -53,6 +87,7 @@ class _DetailScreenState extends State<DetailScreen> {
       floatingActionButton:FloatingActionButton(
         child: const Icon(Icons.save),
         onPressed: (){
+          changed = true;
           setState(() {
             widget.note.description = controllers.text;
           });
